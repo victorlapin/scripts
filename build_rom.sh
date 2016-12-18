@@ -50,7 +50,9 @@ AOSP_TARGET_PACKAGE="out/target/product/$1/YAOSP-v`grep ro.yaosp.version= out/ta
 
 if [ -e out/dist/aosp_$1-ota-eng.$USER.zip ]; then
 
-   . scripts/changelog.sh
+   if [ "$2" = "log" ]; then
+      . scripts/changelog.sh
+   fi
    echo
    echo "-----------------------------------------------------------------------------"
    echo "Package complete for $1"
