@@ -1,8 +1,11 @@
 #!/bin/bash
-start_time=`date +'%d/%m/%y %H:%M:%S'`
+DEVICE="$1"
+SYNC="$2"
+LOG="$3"
+START_TIME=`date +'%d/%m/%y %H:%M:%S'`
 
 # Sync with latest sources
-if [ "$2" == "sync" ]; then
+if [ "$SYNC" == "sync" ]; then
    echo -e "Syncing latest sources"
    repo sync -j `getconf _NPROCESSORS_ONLN` -c -f --force-sync
 fi
@@ -28,15 +31,15 @@ rm out/target/product/*/system/build.prop
 source build/envsetup.sh
 croot
 
-if [ "$1" = "hammerhead" ]; then
+if [ "$DEVICE" = "hammerhead" ]; then
    lunch aosp_hammerhead-userdebug
-else if [ "$1" = "flo" ]; then
+else if [ "$DEVICE" = "flo" ]; then
    lunch aosp_flo-userdebug
-else if [ "$1" = "bullhead" ]; then
+else if [ "$DEVICE" = "bullhead" ]; then
    lunch aosp_bullhead-userdebug
 else
    echo "-----------------------------------------------------------------------------"
-   echo "Unsupported device '$1', stopping ..."
+   echo "Unsupported device '$DEVICE', stopping ..."
    echo "-----------------------------------------------------------------------------"
    exit
 fi
@@ -44,27 +47,27 @@ fi
 fi
 
 echo "-----------------------------------------------------------------------------"
-echo "Building YAOSP for $1"
+echo "Building YAOSP for $DEVICE"
 echo "-----------------------------------------------------------------------------"
 
 make -j `getconf _NPROCESSORS_ONLN` dist
 
-echo "Started  : $start_time"
+echo "Started  : $START_TIME"
 echo "Finished : `date +'%d/%m/%y %H:%M:%S'`"
 
-AOSP_TARGET_PACKAGE="out/target/product/$1/YAOSP-v`grep ro.yaosp.version= out/target/product/$1/system/build.prop | awk -F= '{print $2;}'`-$1-`grep ro.build.version.release= out/target/product/$1/system/build.prop | awk -F= '{print $2;}'`-`grep ro.build.id= out/target/product/$1/system/build.prop | awk -F= '{print $2;}'`-`date +'%Y%m%d-%H%M%S'`.zip"
+AOSP_TARGET_PACKAGE="out/target/product/$DEVICE/YAOSP-v`grep ro.yaosp.version= out/target/product/$DEVICE/system/build.prop | awk -F= '{print $2;}'`-$DEVICE-`grep ro.build.version.release= out/target/product/$DEVICE/system/build.prop | awk -F= '{print $2;}'`-`grep ro.build.id= out/target/product/$DEVICE/system/build.prop | awk -F= '{print $2;}'`-`date +'%Y%m%d-%H%M%S'`.zip"
 
-if [ -e out/dist/aosp_$1-ota-eng.$USER.zip ]; then
+if [ -e out/dist/aosp_$DEVICE-ota-eng.$USER.zip ]; then
 
-   if [ "$3" = "log" ]; then
+   if [ "$LOG" = "log" ]; then
       . scripts/changelog.sh
    fi
    echo
    echo "-----------------------------------------------------------------------------"
-   echo "Package complete for $1"
+   echo "Package complete for $DEVICE"
    echo "-----------------------------------------------------------------------------"
 
-   ln -f out/dist/aosp_$1-ota-eng.$USER.zip $AOSP_TARGET_PACKAGE
+   ln -f out/dist/aosp_$DEVICE-ota-eng.$USER.zip $AOSP_TARGET_PACKAGE
 
    echo
    echo "Package :"
@@ -78,7 +81,7 @@ else
 
    echo
    echo "-----------------------------------------------------------------------------"
-   echo "Package for $1 - Not completed due to errors"
+   echo "Package for $DEVICE - Not completed due to errors"
    echo "-----------------------------------------------------------------------------"
 
 fi
