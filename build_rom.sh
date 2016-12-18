@@ -1,6 +1,12 @@
 #!/bin/bash
 start_time=`date +'%d/%m/%y %H:%M:%S'`
 
+# Sync with latest sources
+if [ "$2" == "sync" ]; then
+   echo -e "Syncing latest sources"
+   repo sync -j `getconf _NPROCESSORS_ONLN` -c -f --force-sync
+fi
+
 echo "."
 echo "."
 echo "."
@@ -50,7 +56,7 @@ AOSP_TARGET_PACKAGE="out/target/product/$1/YAOSP-v`grep ro.yaosp.version= out/ta
 
 if [ -e out/dist/aosp_$1-ota-eng.$USER.zip ]; then
 
-   if [ "$2" = "log" ]; then
+   if [ "$3" = "log" ]; then
       . scripts/changelog.sh
    fi
    echo
