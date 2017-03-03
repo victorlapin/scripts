@@ -3,11 +3,27 @@ DEVICE="$1"
 SYNC="$2"
 LOG="$3"
 START_TIME=`date +'%d/%m/%y %H:%M:%S'`
+SYNC_LOG="sync_error.txt"
 
 # Sync with latest sources
 if [ "$SYNC" == "sync" ]; then
+   if [ -f $SYNC_LOG ]; then
+      rm $SYNC_LOG
+   fi
    echo -e "Syncing latest sources"
-   repo sync -j `getconf _NPROCESSORS_ONLN` -c -f --force-sync
+   repo sync -j `getconf _NPROCESSORS_ONLN` -c -f --force-sync 2> $SYNC_LOG
+
+   if grep -E "^error|^fatal" $SYNC_LOG
+   then
+      echo "------------------------------------------------------------------------------------"
+      echo "error: Exited sync due to fetch errors, please check $SYNC_LOG and correct the issue"
+      echo "------------------------------------------------------------------------------------"
+      exit
+   else
+      echo
+      echo "Repo sync successful"
+      echo
+   fi
 fi
 
 echo "."
