@@ -36,7 +36,7 @@ echo "--------------------------------------------------------------------------
 # Setup ccache
 export USE_CCACHE=1
 export CCACHE_DIR="/home/$USER/.ccache"
-/usr/bin/ccache -M 50G
+/usr/bin/ccache -M 100G
 
 # Force restart Jack
 export JACK_SERVER_VM_ARGUMENTS="-Dfile.encoding=UTF-8 -XX:+TieredCompilation -Xmx15g"
