@@ -11,7 +11,7 @@ if [ "$SYNC" == "sync" ]; then
       rm $SYNC_LOG
    fi
    echo -e "Syncing latest sources"
-   repo sync -j `getconf _NPROCESSORS_ONLN` -c -f --force-sync --no-tags 2> $SYNC_LOG
+   repo sync -j `getconf _NPROCESSORS_ONLN` -c -f --force-sync --no-clone-bundle --no-tags 2> $SYNC_LOG
 
    if grep -E "^error|^fatal" $SYNC_LOG
    then
