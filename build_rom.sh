@@ -1,6 +1,5 @@
 #!/bin/bash
 DEVICE="$1"
-LOG="$2"
 START_TIME=`date +'%d/%m/%y %H:%M:%S'`
 
 echo "."
@@ -52,9 +51,6 @@ AOSP_TARGET_PACKAGE="out/target/product/$DEVICE/YAOSP-v`grep ro.yaosp.version= o
 
 if [ -e out/dist/aosp_$DEVICE-ota-eng.$USER.zip ]; then
 
-   if [ "$LOG" = "log" ]; then
-      . scripts/changelog.sh
-   fi
    echo
    echo "-----------------------------------------------------------------------------"
    echo "Package complete for $DEVICE"
